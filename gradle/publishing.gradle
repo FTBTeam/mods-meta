@@ -1,0 +1,18 @@
+ext {
+    def isPrivate = System.getenv("FTB_PRIVATE") ?: "false"
+    def isSnapshot = System.getenv("SNAPSHOT") ?: "false"
+    def subPath = isSnapshot == "true" ? "snapshots" : "releases"
+    def ftbPath = isPrivate == "true" ? "maven-private-" + subPath : "maven-public-" + subPath
+    def tag = System.getenv("TAG") ?: "release"
+
+    ftbPublishing = [
+        ftbURL : "https://maven-admin.ftb.dev/repository/" + ftbPath,
+        sapsURL : "https://maven.saps.dev/" + isSnapshot ? "snapshot" : "release",
+        mavenVersion : isSnapshot ? project.version + "-SNAPSHOT" : project.version,
+        ftbUser : System.getenv("FTB_MAVEN_USER") ?: "ftb",
+        sapsUser : System.getenv("SAPS_USER") ?: "ftb",
+        ftbToken : System.getenv("FTB_MAVEN_TOKEN"),
+        sapsToken : System.getenv("SAPS_TOKEN"),
+        relType : tag.contains("alpha") ? "alpha" : (tag.contains("beta") ? "beta" : "release")
+    ]
+}
