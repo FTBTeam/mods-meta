@@ -12,7 +12,7 @@ ext {
         ftbUser : System.getenv("FTB_MAVEN_USER") ?: "ftb",
         sapsUser : System.getenv("SAPS_USER") ?: "ftb",
         ftbToken : System.getenv("FTB_MAVEN_TOKEN"),
-        sapsToken : System.getenv("SAPS_TOKEN"),
+        sapsToken : isPrivate ? "" : System.getenv("SAPS_TOKEN"),
         relType : tag.contains("alpha") ? "alpha" : (tag.contains("beta") ? "beta" : "release")
     ]
 }
