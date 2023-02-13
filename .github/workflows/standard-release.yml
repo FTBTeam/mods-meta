@@ -1,0 +1,41 @@
+name: Standard Release
+
+on:
+  workflow_call:
+    inputs:
+      java-version:
+        description: "The java version"
+        default: 17
+        required: false
+        type: number
+      changelog-file:
+        description: "Location of the changelog file"
+        default: "./CHANGELOG.md"
+        required: false
+        type: string
+      curse-publish-task:
+        description: "The name of the task to run for curseforge to publish, leave empty to not publish to curseforge"
+        default: "curseforge"
+        required: false
+        type: string
+      release-files:
+        description: "The files to include in a github release, this is limited to a single input so get creative with your glob patterns"
+        default: "./build/libs/*.jar"
+        required: false
+        type: string
+    secrets:
+      saps-token:
+        required: false
+      ftb-maven-token:
+        required: false
+      curse-token:
+        required: false
+
+jobs:
+  build:
+    name: Build & release
+    uses: ./.github/workflows/base-java.yml
+    with:
+      java-version: ${{ inputs.java-version }}
+      gradle-tasks: build publish ${{ inputs.curse-publish-task }}
+    secrets: inherit

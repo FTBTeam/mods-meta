@@ -1,0 +1,59 @@
+name: Base Java
+
+on:
+  workflow_call:
+    inputs:
+      use-snapshots:
+        description: "Defines if a snapshot build should be published to maven"
+        default: false
+        required: false
+        type: boolean
+      maven-private:
+        description: "True to publish maven artifacts to the private repository"
+        default: false
+        required: false
+        type: boolean
+      java-version:
+        description: "The java version"
+        default: 17
+        required: false
+        type: number
+      gradle-tasks:
+        description: "tasks the gradle action should run"
+        default: build
+        required: false
+        type: string
+    secrets:
+      ftb-maven-token:
+        required: false
+      saps-token:
+        required: false
+      curse-token:
+        required: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone project
+        uses: actions/checkout@v3
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: "temurin"
+          java-version: ${{ inputs.java-version }}
+      - name: Fix borked permissions
+        run: chmod +x ./gradlew
+      - name: Validate Gradle Wrapper
+        uses: gradle/wrapper-validation-action@v1
+      - name: Run gradle tasks [${{ inputs.gradle-tasks }}]
+        uses: gradle/gradle-build-action@v2
+        env:
+          SNAPSHOT: ${{ inputs.use-snapshots }}
+          FTB_PRIVATE: ${{ inputs.maven-private}}
+          SAPS_TOKEN: ${{ secrets.saps-token }}
+          FTB_MAVEN_TOKEN: ${{ secrets.ftb-maven-token }}
+          CURSE_TOKEN: ${{ secrets.curse-token }}
+          TAG: ${{ github.event.release.tag_name }}
+        with:
+          arguments: ${{ inputs.gradle-tasks }}
