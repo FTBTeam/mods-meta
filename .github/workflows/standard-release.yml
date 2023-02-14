@@ -24,7 +24,12 @@ on:
         required: false
         type: string
       maven-private:
-        description: "Set to true to publish Maven artifacts to a private Maven repo"
+        description: "Set to true to publish Maven artifacts to a private Maven repo; use for projects before first release"
+        default: false
+        required: false
+        type: boolean
+      maven-snapshots:
+        description: "Set to true to publish Maven artifacts as snapshots; use when not making a public release"
         default: false
         required: false
         type: boolean
@@ -44,4 +49,5 @@ jobs:
       java-version: ${{ inputs.java-version }}
       gradle-tasks: build publish ${{ inputs.curse-publish-task }}
       maven-private: ${{ inputs.maven-private }}
+      maven-snapshots: ${{ inputs.maven-snapshots }}
     secrets: inherit

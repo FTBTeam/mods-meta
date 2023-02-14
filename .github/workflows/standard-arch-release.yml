@@ -23,6 +23,11 @@ on:
         default: false
         required: false
         type: boolean
+      maven-snapshots:
+        description: "Set to true to publish Maven artifacts as snapshots; use when not making a public release"
+        default: false
+        required: false
+        type: boolean
     secrets:
       saps-token:
         required: false
@@ -40,4 +45,5 @@ jobs:
       curse-publish-task: ${{ inputs.curse-publish-task }}
       release-files: ./+(forge|fabric)/build/libs/*+@(mc+([0-9]).+([0-9]).+([0-9])).jar
       maven-private: ${{ inputs.maven-private }}
+      maven-snapshots: ${{ inputs.maven-snapshots }}
     secrets: inherit
