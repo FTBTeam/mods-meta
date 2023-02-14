@@ -23,6 +23,11 @@ on:
         default: "./build/libs/*.jar"
         required: false
         type: string
+      maven-private:
+        description: "Set to true to publish Maven artifacts to a private Maven repo"
+        default: false
+        required: false
+        type: boolean
     secrets:
       saps-token:
         required: false
@@ -38,4 +43,5 @@ jobs:
     with:
       java-version: ${{ inputs.java-version }}
       gradle-tasks: build publish ${{ inputs.curse-publish-task }}
+      maven-private: ${{ inputs.maven-private }}
     secrets: inherit

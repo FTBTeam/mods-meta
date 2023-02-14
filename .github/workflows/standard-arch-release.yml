@@ -18,6 +18,11 @@ on:
         default: "curseforge"
         required: false
         type: string
+      maven-private:
+        description: "Set to true to publish Maven artifacts to a private Maven repo"
+        default: false
+        required: false
+        type: boolean
     secrets:
       saps-token:
         required: false
@@ -34,4 +39,5 @@ jobs:
       changelog-file: ${{ inputs.changelog-file }}
       curse-publish-task: ${{ inputs.curse-publish-task }}
       release-files: ./+(forge|fabric)/build/libs/*+@(mc+([0-9]).+([0-9]).+([0-9])).jar
+      maven-private: ${{ inputs.maven-private }}
     secrets: inherit
