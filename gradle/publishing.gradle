@@ -8,11 +8,11 @@ ext {
     ftbPublishing = [
         ftbURL : "https://maven-admin.ftb.dev/repository/" + ftbPath,
         sapsURL : "https://maven.saps.dev/" + isSnapshot ? "snapshot" : "release",
-        mavenVersion : isSnapshot ? project.version + "-SNAPSHOT" : project.version,
+        mavenVersion : isSnapshot == "true" ? project.version + "-SNAPSHOT" : project.version,
         ftbUser : System.getenv("FTB_MAVEN_USER") ?: "ftb",
         sapsUser : System.getenv("SAPS_USER") ?: "ftb",
         ftbToken : System.getenv("FTB_MAVEN_TOKEN"),
-        sapsToken : isPrivate ? "" : System.getenv("SAPS_TOKEN"),
+        sapsToken : isPrivate == "true" ? "" : System.getenv("SAPS_TOKEN"),
         relType : tag.contains("alpha") ? "alpha" : (tag.contains("beta") ? "beta" : "release")
     ]
 }
