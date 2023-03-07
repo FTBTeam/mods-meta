@@ -55,5 +55,6 @@ jobs:
           FTB_MAVEN_TOKEN: ${{ secrets.ftb-maven-token }}
           CURSEFORGE_KEY: ${{ secrets.curse-token }}
           TAG: ${{ github.event.release.tag_name }}
+          CHANGELOG: ${{ github.event.release.body }}
         with:
           arguments: ${{ inputs.gradle-tasks }}
