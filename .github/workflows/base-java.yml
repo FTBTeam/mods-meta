@@ -53,7 +53,7 @@ jobs:
           FTB_PRIVATE: ${{ inputs.maven-private}}
           SAPS_TOKEN: ${{ secrets.saps-token }}
           FTB_MAVEN_TOKEN: ${{ secrets.ftb-maven-token }}
-          CURSE_TOKEN: ${{ secrets.curse-token }}
+          CURSEFORGE_KEY: ${{ secrets.curse-token }}
           TAG: ${{ github.event.release.tag_name }}
         with:
           arguments: ${{ inputs.gradle-tasks }}
