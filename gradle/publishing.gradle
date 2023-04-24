@@ -7,7 +7,7 @@ ext {
 
     ftbPublishing = [
         ftbURL : "https://maven-admin.ftb.dev/repository/" + ftbPath,
-        sapsURL : "https://maven.saps.dev/" + isSnapshot ? "snapshot" : "release",
+        sapsURL : "https://maven.saps.dev/" + subPath,
         mavenVersion : isSnapshot == "true" ? project.version + "-SNAPSHOT" : project.version,
         ftbUser : System.getenv("FTB_MAVEN_USER") ?: "ftb",
         sapsUser : System.getenv("SAPS_USER") ?: "ftb",
