@@ -1,6 +1,7 @@
 ext {
     def isPrivate = System.getenv("FTB_PRIVATE") ?: "false"
     def isSnapshot = System.getenv("SNAPSHOT") ?: "false"
+    if (!System.getenv("GITHUB_RUN_NUMBER")) isSnapshot = "true"
     def subPath = isSnapshot == "true" ? "snapshots" : "releases"
     def ftbPath = isPrivate == "true" ? "maven-private-" + subPath : "maven-" + subPath
     def tag = System.getenv("TAG") ?: "release"
