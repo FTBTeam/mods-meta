@@ -3,11 +3,10 @@ ext {
     def isSnapshot = System.getenv("SNAPSHOT") ?: "false"
     if (!System.getenv("GITHUB_RUN_NUMBER")) isSnapshot = "true"
     def subPath = isSnapshot == "true" ? "snapshots" : "releases"
-    def ftbPath = isPrivate == "true" ? "maven-private-" + subPath : "maven-" + subPath
     def tag = System.getenv("TAG") ?: "release"
 
     ftbPublishing = [
-        ftbURL : "https://maven-admin.ftb.dev/repository/" + ftbPath,
+        ftbURL : "https://maven.ftb.dev/" + subPath,
         sapsURL : "https://maven.saps.dev/" + subPath,
         mavenVersion : isSnapshot == "true" ? project.version + "-SNAPSHOT" : project.version,
         ftbUser : System.getenv("FTB_MAVEN_USER") ?: "ftb",
