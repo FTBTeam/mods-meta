@@ -56,5 +56,6 @@ jobs:
           CURSEFORGE_KEY: ${{ secrets.curse-token }}
           TAG: ${{ github.event.release.tag_name }}
           CHANGELOG: ${{ github.event.release.body }}
+          GITHUB_TOKEN: ${{ secrets.github-token }}
         with:
           arguments: ${{ inputs.gradle-tasks }}
