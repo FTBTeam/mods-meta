@@ -1,0 +1,98 @@
+#!/bin/bash
+#
+# Driver script to do a mod release.
+#
+# Functions by pushing a tag in the form "vX.Y.Z[-(alpha|beta)]" to the mod repo
+# GitHub CI handles the rest
+#
+
+OPTSTRING="hb:r:"
+BRANCH=main
+RELTYPE=""
+
+usage_and_exit() {
+    echo "Usage: release-mod [modname] [-b branch] [-r (alpha|beta)]"
+    exit 1
+}
+
+# Option parsing
+while getopts ${OPTSTRING} opt; do
+    case ${opt} in
+    h)
+        usage_and_exit
+        ;;
+    b)
+        BRANCH=$OPTARG
+        ;;
+    r)
+        RELTYPE=$OPTARG
+        ;;
+    :)
+        echo "Option -${OPTARG} requires an argument."
+        exit 1
+        ;;
+    ?)
+        echo "Invalid option: -${OPTARG}."
+        exit 1
+        ;;
+  esac
+done
+shift $((OPTIND-1))
+
+# Try and auto-detect the mod name (if we're in a directory with a gradle.properties)
+if [ -f gradle.properties ]; then
+    DEFMOD=$(basename $(pwd))
+else
+    DEFMOD=""
+fi
+MOD=${1:-$DEFMOD}
+
+if [ -z "$MOD" ]; then
+    usage_and_exit
+fi
+
+tmpdir=$(mktemp -d)
+cd $tmpdir
+trap "rm -rf $tmpdir" EXIT
+echo "Work directory: $tmpdir"
+
+# Check out a fresh copy of the repo and go to the right branch
+REPO=git@github.com:FTBTeam/$MOD.git 
+git clone $REPO || exit 1
+cd $MOD
+git checkout $BRANCH || exit 1
+
+# Determine the tag to be pushed from the gradle.properties and release type
+test -z "$RELTYPE" || RELTYPE="-$RELTYPE"
+ver=$(grep mod_version gradle.properties | cut -d= -f2 | sed -e 's/ //g')
+tag="v$ver$RELTYPE"
+
+# Ensure the tag doesn't already eist
+existing=$(git tag -l $tag)
+if [ ! -z "$existing" ]; then
+    echo "ERROR: Tag '$tag' already exists in this repo!"
+    echo "Have you remembered to update 'mod_version' in gradle.properties?"
+    exit 1
+fi
+
+# Summarise plan and get confirmation
+echo ""
+echo "Preparing a mod release for $MOD ($REPO - $BRANCH)"
+echo "About to create git tag '$tag' and push it"
+echo "This will trigger a Curseforge release for this version!"
+while true; do
+    read -p "Press 'y' to confirm, 'n' to cancel: " answer
+    case $answer in 
+    	y ) echo Continuing with tag push!;
+    		break;;
+    	n ) echo Cancelled!;
+    		exit;;
+    	* ) echo invalid response;;
+    esac
+done
+
+# Do it!
+git tag -am "$tag release" $tag \
+    && git push origin --tags
+
+echo "Complete!"
