@@ -62,12 +62,39 @@ git clone $REPO || exit 1
 cd $MOD
 git checkout $BRANCH || exit 1
 
+# Ensure this repo is set up for tag-based releases
+workflow=.github/workflows/release.yml
+grep -q "on:" $workflow && grep -q "push:" $workflow && grep -q "tags:" $workflow \
+    && grep -q gradle/changelog.gradle build.gradle
+if [ "$?" -ne 0 ]; then
+    cat <<EOT
+
+This repo is not set up for tag-based publishing!"
+
+Ensure the top-level build.gradle includes:
+  
+  apply from: 'https://raw.githubusercontent.com/FTBTeam/mods-meta/main/gradle/changelog.gradle'
+
+and .github/workflows/release.yml runs on a tag push:
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+\.[0-9]+\.[0-9]+'
+      - 'v[0-9]+\.[0-9]+\.[0-9]+-[a-z]+'
+      - 'v[0-9]+\.[0-9]+\.[0-9]+-[a-z]+\.[0-9]+'
+
+EOT
+
+    exit 1
+fi
+
 # Determine the tag to be pushed from the gradle.properties and release type
 test -z "$RELTYPE" || RELTYPE="-$RELTYPE"
 ver=$(grep mod_version gradle.properties | cut -d= -f2 | sed -e 's/ //g')
 tag="v$ver$RELTYPE"
 
-# Ensure the tag doesn't already eist
+# Ensure the tag doesn't already exist
 existing=$(git tag -l $tag)
 if [ ! -z "$existing" ]; then
     echo "ERROR: Tag '$tag' already exists in this repo!"
