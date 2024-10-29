@@ -3,17 +3,6 @@ def changelogFooter = """
 
 If you have any issues with this mod, please report them on our [Issue Tracker](https://go.ftb.team/support-mod-issues)
 
-### Socials
-<p>
-  <a href="https://go.ftb.team/discord" rel="nofollow"><img src="https://cdn.feed-the-beast.com/assets/a1/mods/social-discord@smallest.webp" alt="" width="70" height="70"></a>
-  <a href="https://go.ftb.team/github" rel="nofollow"><img src="https://cdn.feed-the-beast.com/assets/a1/mods/social-github@smallest.webp" alt="" width="70" height="70"></a>
-  <a href="https://go.ftb.team/twitter" rel="nofollow"><img src="https://cdn.feed-the-beast.com/assets/a1/mods/social-twitter-x@smallest.webp" alt="" width="70" height="70"></a>
-  <a href="https://go.ftb.team/youtube" rel="nofollow"><img src="https://cdn.feed-the-beast.com/assets/a1/mods/social-youtube@smallest.webp" alt="" width="70" height="70"></a>
-  <a href="https://go.ftb.team/twitch" rel="nofollow"><img src="https://cdn.feed-the-beast.com/assets/a1/mods/social-twitch@smallest.webp" alt="" width="70" height="70"></a>
-  <a href="https://go.ftb.team/instagram" rel="nofollow"><img src="https://cdn.feed-the-beast.com/assets/a1/mods/social-instagram@smallest.webp" alt="" width="70" height="70"></a>
-  <a href="https://go.ftb.team/facebook" rel="nofollow"><img src="https://cdn.feed-the-beast.com/assets/a1/mods/social-facebook@smallest.webp" alt="" width="70" height="70"></a>
-  <a href="https://go.ftb.team/tiktok" rel="nofollow"><img src="https://cdn.feed-the-beast.com/assets/a1/mods/social-tiktok@smallest.webp" alt="" width="70" height="70"></a>
-</p>
 """
 
 ext.createChangelog = (Project project) -> {
