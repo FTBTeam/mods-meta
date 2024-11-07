@@ -23,6 +23,10 @@ while getopts ${OPTSTRING} opt; do
         ;;
     b)
         BRANCH=$OPTARG
+        if [ "$BRANCH" != main -a "$BRANCH" != */main ]; then
+            echo "Invalid branch $BRANCH: must be a 'main' or '<ver>/main' branch!"
+            usage_and_exit
+        fi
         ;;
     r)
         RELTYPE=$OPTARG
@@ -57,8 +61,8 @@ trap "rm -rf $tmpdir" EXIT
 echo "Work directory: $tmpdir"
 
 # Check out a fresh copy of the repo and go to the right branch
-REPO=git@github.com:FTBTeam/$MOD.git 
-git clone $REPO || exit 1
+REPO=git@github.com:FTBTeam/$MOD
+git clone $REPO.git || exit 1
 cd $MOD
 git checkout $BRANCH || exit 1
 
@@ -75,7 +79,11 @@ Ensure the top-level build.gradle includes:
   
   apply from: 'https://raw.githubusercontent.com/FTBTeam/mods-meta/main/gradle/changelog.gradle'
 
-and .github/workflows/release.yml runs on a tag push:
+and the publishMods {} section defines:
+
+  changelog = createChangelog(project)
+
+and that .github/workflows/release.yml runs on a tag push:
 
 on:
   push:
@@ -97,8 +105,9 @@ tag="v$ver$RELTYPE"
 # Ensure the tag doesn't already exist
 existing=$(git tag -l $tag)
 if [ ! -z "$existing" ]; then
-    echo "ERROR: Tag '$tag' already exists in this repo!"
-    echo "Have you remembered to update 'mod_version' in gradle.properties?"
+    echo "ERROR: Tag '$tag' already exists in this repo! Check that:"
+    echo "* You have updated 'mod_version' in gradle.properties"
+    echo "* You have merged the 'dev' git branch into 'main'"
     exit 1
 fi
 
@@ -123,3 +132,5 @@ git tag -am "$tag release" $tag \
     && git push origin --tags
 
 echo "Complete!"
+url=$(echo $REPO | sed -e 's!git@github\.com:!https://github.com/!')
+echo "Workflow URL: $url/actions"
