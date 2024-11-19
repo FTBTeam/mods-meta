@@ -23,7 +23,7 @@ while getopts ${OPTSTRING} opt; do
         ;;
     b)
         BRANCH=$OPTARG
-        if [ "$BRANCH" != main -a "$BRANCH" != */main ]; then
+        if [[ "$BRANCH" != main && "$BRANCH" != */main ]]; then
             echo "Invalid branch $BRANCH: must be a 'main' or '<ver>/main' branch!"
             usage_and_exit
         fi
