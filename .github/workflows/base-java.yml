@@ -47,9 +47,13 @@ jobs:
       - name: Fix borked permissions
         run: chmod +x ./gradlew
       - name: Validate Gradle Wrapper
-        uses: gradle/wrapper-validation-action@v1
+        uses: gradle/actions/wrapper-validation@v4
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-read-only: false
       - name: Run gradle tasks [${{ inputs.gradle-tasks }}]
-        uses: gradle/gradle-build-action@v2
+        run: ./gradlew ${{ inputs.gradle-tasks }}
         env:
           SNAPSHOT: ${{ inputs.maven-snapshots }}
           FTB_PRIVATE: ${{ inputs.maven-private}}
@@ -59,5 +63,3 @@ jobs:
           TAG: ${{ github.event.release.tag_name }}
           CHANGELOG: ${{ github.event.release.body }}
           GITHUB_TOKEN: ${{ secrets.github-token }}
-        with:
-          arguments: ${{ inputs.gradle-tasks }}
