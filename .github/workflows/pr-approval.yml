@@ -1,0 +1,40 @@
+on:
+  workflow_call:
+    inputs:
+      java-version:
+        description: "The java version"
+        default: 21
+        required: false
+        type: number
+      pr-number:
+        description: "The pull request number"
+        required: true
+        type: number
+
+jobs:
+  on-approval:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone
+        uses: actions/checkout@v4
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: "microsoft"
+          java-version: ${{ inputs.java-version }}
+      - name: Setup gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-read-only: false
+      - name: Test build
+        run: ./gradlew build
+      # If the build was successful, we're good to go, let's update the changelog, commit, and merge the PR
+      - name: Update changelog
+        run: ./gradlew prepareChangelog
+      - name: Commit changes
+        run: | 
+          git config --global user.email "action@github.com"
+          git config --global user.name "GitHub Action"
+          git commit -am "[ci-skip] Update changelog"
+      - name: Merge PR
+        run: gh pr merge ${{ inputs.pr-number }} --merge
