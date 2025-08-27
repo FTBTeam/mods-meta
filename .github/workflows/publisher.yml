@@ -62,7 +62,6 @@ jobs:
           CURSEFORGE_KEY: ${{ secrets.curse-token }}
           CURSEFORGE_TOKEN: ${{ secrets.curse-token }}
           MODRINTH_TOKEN: ${{ secrets.modrinth-token }}
-          TAG: ${{ github.event.release.tag_name }}
           GITHUB_TOKEN: ${{ secrets.github-token }}
       - name: Create tag
         if: ${{ !inputs.is-snapshot }}

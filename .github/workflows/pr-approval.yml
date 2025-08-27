@@ -35,6 +35,6 @@ jobs:
         run: | 
           git config --global user.email "action@github.com"
           git config --global user.name "GitHub Action"
-          git commit -am "[ci-skip] Update changelog"
+          git commit -am "chore: Update changelog"
       - name: Merge PR
-        run: gh pr merge ${{ inputs.pr-number }} --merge
+        run: gh pr merge ${{ inputs.pr-number }} --body "[release] after approval"

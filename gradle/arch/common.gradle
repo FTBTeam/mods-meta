@@ -1,0 +1,18 @@
+architectury {
+    def projects = this.rootProject.childProjects
+    def targetPlatforms = []
+    if (projects.containsKey("forge")) targetPlatforms.add("forge")
+    if (projects.containsKey("fabric")) targetPlatforms.add("fabric")
+    if (projects.containsKey("neoforge")) targetPlatforms.add("neoforge")
+    if (projects.containsKey("forge")) targetPlatforms.add("forge")
+
+    common(*targetPlatforms)
+}
+
+configurations {
+    dev
+}
+
+artifacts {
+    dev(jar)
+}
