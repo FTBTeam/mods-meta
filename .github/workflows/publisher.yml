@@ -58,21 +58,18 @@ jobs:
         env:
           SNAPSHOT: ${{ inputs.is-snapshot }}
           FTB_MAVEN_TOKEN: ${{ secrets.ftb-maven-token }}
+          # @deprecated don't use this one anymore!
           CURSEFORGE_KEY: ${{ secrets.curse-token }}
+          CURSEFORGE_TOKEN: ${{ secrets.curse-token }}
           MODRINTH_TOKEN: ${{ secrets.modrinth-token }}
           TAG: ${{ github.event.release.tag_name }}
           GITHUB_TOKEN: ${{ secrets.github-token }}
-      - name: Pull version from gradle
-        # We need to pull the version from gradle itself as it's likely proccessed. We can pull it from the root project
-        run: |
-          VERSION=$(./gradlew getRootVersion | grep 'projectVersion=' | sed 's/.*=//')
-          echo "Current version: $VERSION"
-          echo "MOD_VERSION=$VERSION" >> $GITHUB_ENV
       - name: Create tag
         if: ${{ !inputs.is-snapshot }}
         run: |
-          git tag "v${{ env.MOD_VERSION }}"
-          git push origin "v${{ env.MOD_VERSION }}"
+          VERSION=$(./gradlew getRootVersion | grep 'projectVersion=' | sed 's/.*=//')
+          git tag "v$VERSION"
+          git push origin "v$VERSION"
       - name: Bump version
         if: ${{ !inputs.is-snapshot }}
         # Get the properties.gradle, fetch the mod_version, bump the minor / final dot version, commit the change
