@@ -1,0 +1,48 @@
+plugins {
+    id "com.github.johnrengelman.shadow" version "7.0.0"
+}
+
+architectury {
+    platformSetupLoomIde()
+    fabric()
+}
+
+configurations {
+    common
+    shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
+    compileClasspath.extendsFrom common
+    runtimeClasspath.extendsFrom common
+    developmentFabric.extendsFrom common
+    dev
+}
+
+artifacts {
+    dev(jar)
+}
+
+dependencies {
+    common(project(path: ":common", configuration: "dev")) { transitive false }
+    shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
+}
+
+shadowJar {
+    configurations = [project.configurations.shadowCommon]
+    setArchiveClassifier("dev-shadow")
+}
+
+remapJar {
+    inputFile.set shadowJar.archiveFile
+    dependsOn shadowJar
+    archiveBaseName.set "${project.base.archivesName}-${project.name}"
+    archiveClassifier.set null
+}
+
+jar {
+    setArchiveClassifier("dev")
+}
+
+components.java {
+    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
+        skip()
+    }
+}
