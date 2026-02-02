@@ -15,6 +15,18 @@ usage_and_exit() {
     exit 1
 }
 
+get_version() {
+  local v=$(grep "^mod_version[[:space:]]*=" gradle.properties | sed -e 's/ //g' | cut -d= -f2)
+  if [[ "$v" == *"."* ]]; then
+    # looks like full version in mod_version
+    echo $v
+  else
+    # looks like minor only; get the rest from minecraft_version
+    local mc=$(grep "^minecraft_version[[:space:]]*=" gradle.properties | sed -e 's/ //g' | cut -d. -f2,3)
+    echo "$mc.$v"
+  fi
+}
+
 # Option parsing
 while getopts ${OPTSTRING} opt; do
     case ${opt} in
@@ -68,7 +80,7 @@ git checkout $BRANCH || exit 1
 
 # Ensure this repo is set up for tag-based releases
 workflow=.github/workflows/release.yml
-grep -q "on:" $workflow && grep -q "push:" $workflow && grep -q "tags:" $workflow \
+grep -q "^on:" $workflow && grep -q "push:" $workflow && grep -q "tags:" $workflow \
     && grep -q gradle/changelog.gradle build.gradle
 if [ "$?" -ne 0 ]; then
     cat <<EOT
@@ -99,7 +111,8 @@ fi
 
 # Determine the tag to be pushed from the gradle.properties and release type
 test -z "$RELTYPE" || RELTYPE="-$RELTYPE"
-ver=$(grep mod_version gradle.properties | cut -d= -f2 | sed -e 's/ //g')
+ver=$(get_version)
+#ver=$(grep mod_version gradle.properties | cut -d= -f2 | sed -e 's/ //g')
 tag="v$ver$RELTYPE"
 
 # Ensure the tag doesn't already exist
