@@ -58,6 +58,6 @@ jobs:
           SAPS_TOKEN: ${{ secrets.saps-token }}
           FTB_MAVEN_TOKEN: ${{ secrets.ftb-maven-token }}
           CURSEFORGE_KEY: ${{ secrets.curse-token }}
-          TAG: ${{ github.event.release.tag_name }}
+          TAG: ${{ github.ref_name }}
           CHANGELOG: ${{ github.event.release.body }}
           GITHUB_TOKEN: ${{ secrets.github-token }}
