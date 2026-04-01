@@ -1,7 +1,7 @@
 def allowedSubProjects = ["common", "fabric", "forge", "neoforge"]
 
 // This effectively deprecates the above logic
-ext.createPublishingBlock = (Project project) -> {
+ext.createMavenPublishingBlock = (Project project) -> {
     def mavenToken = project.providers.environmentVariable("FTB_MAVEN_TOKEN")
     boolean isSnapshot = project.providers.environmentVariable("SNAPSHOT")
             .map { it == "true" }
