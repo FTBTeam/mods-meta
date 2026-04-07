@@ -4,6 +4,7 @@ ext.commonMavenRepos = { RepositoryHandler repos ->
             url = "https://maven.ftb.dev/releases"
             content {
                 includeGroup("dev.ftb.mods")
+                includeGroup("net.rocketplatform.game.client.mod")
             }
         }
         maven {
