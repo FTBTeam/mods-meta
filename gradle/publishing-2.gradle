@@ -16,7 +16,7 @@ ext.createMavenPublishingBlock = (Project project) -> {
         publications {
             register("mavenJava${project.name}", MavenPublication) {
                 version = project.version + versionSuffix
-                from components.java
+                from project.components.java
                 artifactId = project.rootProject.base.archivesName.get() + (isMonoRepo && project.name != "common" ? "-" + project.name : "")
             }
         }
