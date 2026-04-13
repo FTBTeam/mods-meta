@@ -22,10 +22,6 @@ ext.createMavenPublishingBlock = (Project project) -> {
                         version = project.version + versionSuffix
                         artifactId = subProject.base.archivesName.get() + "-" + subProject.name
                         from subProject.components.java
-
-                        if (subProject.tasks.findByName('sourcesJar')) {
-                            artifact subProject.tasks.named('sourcesJar')
-                        }
                     }
                 }
             } else {
@@ -33,10 +29,6 @@ ext.createMavenPublishingBlock = (Project project) -> {
                     version = project.version + versionSuffix
                     from components.java
                     artifactId = project.rootProject.base.archivesName.get()
-
-                    if (project.tasks.findByName('sourcesJar')) {
-                        artifact project.tasks.named('sourcesJar')
-                    }
                 }
             }
         }
