@@ -26,8 +26,6 @@ on:
     secrets:
       ftb-maven-token:
         required: false
-      saps-token:
-        required: false
       curse-token:
         required: false
       github-token:
@@ -50,14 +48,15 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
         with:
           cache-read-only: false
+      - name: Set skip curseforge flag
+        if: ${{ contains(github.event.head_commit.message, '[cfskip]') }}
+        run: echo "SKIP_CURSEFORGE=true" >> $GITHUB_ENV
       - name: Run gradle tasks [${{ inputs.gradle-tasks }}]
         run: ./gradlew ${{ inputs.gradle-tasks }}
         env:
           SNAPSHOT: ${{ inputs.maven-snapshots }}
           FTB_PRIVATE: ${{ inputs.maven-private}}
-          SAPS_TOKEN: ${{ secrets.saps-token }}
           FTB_MAVEN_TOKEN: ${{ secrets.ftb-maven-token }}
           CURSEFORGE_KEY: ${{ secrets.curse-token }}
           TAG: ${{ github.ref_name }}
-          CHANGELOG: ${{ github.event.release.body }}
           GITHUB_TOKEN: ${{ secrets.github-token }}
