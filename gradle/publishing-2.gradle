@@ -20,7 +20,7 @@ ext.createMavenPublishingBlock = (Project project) -> {
                 subProjects.forEach { subProject ->
                     register(subProject.name + "MavenJava", MavenPublication) {
                         version = project.version + versionSuffix
-                        artifactId = subProject.base.archivesName.get() + "-" + subProject.name
+                        artifactId = subProject.base.archivesName.get() + (subProject.name != "common" ? "-" + subProject.name : "")
                         from subProject.components.java
                     }
                 }
