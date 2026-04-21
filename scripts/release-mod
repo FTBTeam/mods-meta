@@ -22,7 +22,7 @@ get_version() {
     echo $v
   else
     # looks like minor only; get the rest from minecraft_version
-    local mc=$(grep "^minecraft_version[[:space:]]*=" gradle.properties | sed -e 's/ //g' | cut -d. -f2,3)
+    local mc=$(grep "^minecraft_version[[:space:]]*=" gradle.properties | sed -e 's/ //g' | cut -d= -f2)
     echo "$mc.$v"
   fi
 }
