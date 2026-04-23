@@ -23,6 +23,8 @@ get_version() {
   else
     # looks like minor only; get the rest from minecraft_version
     local mc=$(grep "^minecraft_version[[:space:]]*=" gradle.properties | sed -e 's/ //g' | cut -d= -f2)
+    # we use a "21.x.y" versioning scheme on 1.21.x so drop the leading "1"
+    mc=$(echo $mc | sed -e 's/^1\.//')
     echo "$mc.$v"
   fi
 }
