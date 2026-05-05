@@ -12,7 +12,7 @@ ext.createModVersion = (Project project) -> {
     def mcVersion = normalisedMcVersion(project)
 
     // kludge: 1.21.1 should be rewritten to 21.1
-    return mcVersion.replaceAll("1\\.21\\.1", "21.1") + "." + modVersion
+    return mcVersion.replaceAll("^1\\.21\\.1$", "21.1") + "." + modVersion
 }
 
 ext.normalisedMcVersion = (Project project) -> {
